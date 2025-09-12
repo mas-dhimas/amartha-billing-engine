@@ -15,6 +15,9 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/mas-dhimas/amartha/config"
 	"github.com/mas-dhimas/amartha/internal/api"
+	"github.com/mas-dhimas/amartha/internal/customer"
+	"github.com/mas-dhimas/amartha/internal/loan"
+	"github.com/mas-dhimas/amartha/internal/payment"
 	"github.com/mas-dhimas/amartha/pkg/database"
 	"golang.org/x/time/rate"
 
@@ -104,7 +107,20 @@ func main() {
 		os.Exit(0)
 	}
 
-	apiHandler := api.NewHandler()
+	// Initialize Repositories, Services, and Handlers
+	customerRepository := customer.NewPostgresRepository(dbPool)
+	customerService := customer.NewCustomerService(customerRepository)
+	customerHandler := api.NewCustomerHandler(customerService)
+
+	loanRepository := loan.NewPostgresRepository(dbPool)
+	loanService := loan.NewLoanService(loanRepository)
+	loanHandler := api.NewLoanHandler(loanService)
+
+	paymentRepository := payment.NewPostgresRepository(dbPool)
+	paymentService := payment.NewPaymentService(paymentRepository)
+	paymentHandler := api.NewPaymentHandler(paymentService)
+
+	apiHandler := api.NewHandler(*customerHandler, *loanHandler, *paymentHandler)
 
 	// Echo instance
 	e := echo.New()
