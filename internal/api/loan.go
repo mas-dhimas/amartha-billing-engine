@@ -45,7 +45,7 @@ func (h *loanHandler) MakeLoan(e echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "Missing required fields: customer_id, principal, and term_weeks are mandatory")
 	}
 
-	err := h.loanService.MakeLoan(req)
+	id, err := h.loanService.MakeLoan(req)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to create loan due to internal error")
 	}
@@ -53,6 +53,7 @@ func (h *loanHandler) MakeLoan(e echo.Context) error {
 	// Implementation for making a loan would go here
 	return e.JSON(http.StatusOK, map[string]map[string]any{
 		"data": {
+			"id":      id,
 			"message": "Loan created successfully",
 		},
 	})

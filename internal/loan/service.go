@@ -7,7 +7,7 @@ import (
 
 type Service interface {
 	GetLoanOutstanding(loanID string) (int64, error)
-	MakeLoan(loan LoanRequest) error
+	MakeLoan(loan LoanRequest) (string, error)
 }
 
 type loanService struct {
@@ -23,7 +23,7 @@ func (s *loanService) GetLoanOutstanding(loanID string) (int64, error) {
 	return s.repo.GetLoanOutstanding(loanID)
 }
 
-func (s *loanService) MakeLoan(req LoanRequest) error {
+func (s *loanService) MakeLoan(req LoanRequest) (string, error) {
 	var payments []payment.Payment
 	loan := Loan{
 		CustomerID:     uuid.MustParse(req.CustomerID),
@@ -44,10 +44,10 @@ func (s *loanService) MakeLoan(req LoanRequest) error {
 		})
 	}
 
-	err := s.repo.InsertLoan(loan, payments)
+	id, err := s.repo.InsertLoan(loan, payments)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return id, nil
 }

@@ -36,7 +36,7 @@ func (h *paymentHandler) MakePayment(e echo.Context) error {
 
 	return e.JSON(http.StatusOK, map[string]map[string]any{
 		"data": {
-			"message": "Loan created successfully",
+			"message": "Payment created successfully",
 		},
 	})
 }
