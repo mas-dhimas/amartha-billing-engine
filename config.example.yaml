@@ -1,0 +1,16 @@
+service_data:
+  address: 8080
+  log_level: "debug"
+  rate_limit: 100
+
+source_data:
+  postgresdb_server: localhost
+  postgresdb_port: 5432
+  postgresdb_name: amartha
+  postgresdb_username: dbuser
+  postgresdb_password: dbpass
+  postgresdb_timeout: 10
+  postgresdb_max_conns: 10
+  postgresdb_min_conns: 2
+  postgresdb_max_conn_lifetime: 3600
+  postgresdb_max_conn_idle_time: 1800
